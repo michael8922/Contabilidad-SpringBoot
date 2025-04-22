@@ -14,9 +14,7 @@ services:
       - contabilidad-net
 
   contabilidad-backend:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: mianzas/contabilidad-springboot:latest
     container_name: contabilidad-springboot
     ports:
       - "8080:8080"

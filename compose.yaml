@@ -1,32 +1,34 @@
-version: '3.9'
+version: "3.8"
 
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     environment:
-      - ACCEPT_EULA=yes
-      - MSSQL_PID=express
-      - MSSQL_SA_PASSWORD=verYs3cret
+      SA_PASSWORD: "Cont4bl3Secure@2025"
+      ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+      - ./init-db:/docker-entrypoint-initdb.d
     networks:
-      - contabilidad-net
+      - backend
 
-  contabilidad-backend:
-    image: mianzas/contabilidad-springboot:latest
+  contabilidad-springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: contabilidad-springboot
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:sqlserver://sqlserver:1433;databaseName=contabilidad
-      - SPRING_DATASOURCE_USERNAME=sa
-      - SPRING_DATASOURCE_PASSWORD=admin
     depends_on:
       - sqlserver
+    ports:
+      - "8080:8080"
     networks:
-      - contabilidad-net
+      - backend
+
+volumes:
+  sql_data:
 
 networks:
-  contabilidad-net:
-    driver: bridge
+  backend:

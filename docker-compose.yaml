@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   sqlserver:
@@ -9,11 +9,9 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - "1433:1433"
-    volumes:
-      - sql_data:/var/opt/mssql
-      - ./init-db:/docker-entrypoint-initdb.d
     networks:
       - backend
+    restart: always
 
   contabilidad-springboot:
     build:
@@ -26,9 +24,8 @@ services:
       - "8080:8080"
     networks:
       - backend
-
-volumes:
-  sql_data:
+    restart: on-failure
 
 networks:
   backend:
+    external: true

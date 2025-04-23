@@ -1,6 +1,19 @@
-FROM eclipse-temurin:21-jdk
-VOLUME /tmp
-COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+version: '3.8'
 
+services:
+  contabilidad-springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: contabilidad-springboot
+    depends_on:
+      - sqlserver
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    restart: on-failure
 
+networks:
+  backend:
+    external: true
